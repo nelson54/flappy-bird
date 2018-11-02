@@ -145,6 +145,8 @@ class FlappyBird extends Game {
 
     endGame() {
         if(!this.isGameOver) {
+            this.bird.freezeAnimation = true;
+
             this.isGameOver = true;
             this.gameOver = new GameOver(this, 188, 38);
             this.gameOver.color = 'rgba(0,0,0,0)';
@@ -155,7 +157,6 @@ class FlappyBird extends Game {
 
     restart() {
         this.isGameOver = false;
-
 
         this.gameOver.isAlive = false;
         this.gameOver = null;
@@ -177,7 +178,6 @@ class Bird extends Sprite {
     }
 
     handleCollision(sprite) {
-        this.freezeAnimation = true;
         this.game.endGame();
     }
 
@@ -208,6 +208,11 @@ class Bird extends Sprite {
                 this.animateSpeed = 150;
             }
         }
+
+        if(this.y < -200 || this.y > this.game.height + 200) {
+            this.game.endGame();
+        }
+
 
         this.y += this.yDelta * timeDelta * .001;
 
