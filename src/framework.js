@@ -102,14 +102,22 @@ class Sprite {
     }
 
     center() {
-        return {x: this.x + (this.width/2), y: this.y + (this.height/2)}
-    }
-
-    get worldAnchorPosition() {
-        let x = this.x + (this.width * this.anchor.x),
-            y = this.y - (this.height * this.anchor.y);
+        let x = (this.x - (this.width * this.anchor.x)) + this.width * .5,
+            y = (this.y - (this.height * this.anchor.y)) + this.height * .5;
 
         return {x, y};
+    }
+
+    top() {
+        return this.x + (this.width * this.anchor.x)
+    }
+
+    left() {
+
+    }
+
+    right() {
+
     }
 
     rotate(degrees) {
@@ -295,17 +303,21 @@ class InputHandler {
     }
 
     start() {
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keypress', (e) => {
             this.handleKeyDown(e);
         });
 
         document.addEventListener('touchstart', (e) => {
             this.handleTouch(e);
         });
+
+        document.addEventListener('mousedown', (e) => {
+            this.handleTouch(e);
+        })
     }
 
     handleKeyDown(key) {
-        this.keysPressed[key.code] = true;
+        this.keysPressed[key.key] = true;
     }
 
     handleTouch(event) {

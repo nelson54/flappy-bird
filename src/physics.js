@@ -56,8 +56,8 @@ class PhysicsSystem {
     }
 
     detectCircleRectangleCollision(circle, rectangle) {
-        let xDistance = Math.abs(circle.sprite.center().x - rectangle.sprite.center().x);
-        let yDistance = Math.abs(circle.sprite.center().y - rectangle.sprite.center().y);
+        let xDistance = Math.abs(circle.sprite.x - rectangle.sprite.center().x);
+        let yDistance = Math.abs(circle.sprite.y - rectangle.sprite.center().y);
 
         if(xDistance > (rectangle.width/2 + circle.radius) || yDistance > (rectangle.height/2 + circle.radius)) {
             return false;

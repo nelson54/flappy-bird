@@ -101,7 +101,7 @@ class FlappyBird extends Game {
 
         this.scoreText = this.score.toString().padStart(3, '0');
 
-        if(this.inputHandler.keysPressed['Space'] || this.inputHandler.keysPressed['Touch']) {
+        if(this.inputHandler.keysPressed[' '] || this.inputHandler.keysPressed['Touch']) {
             this.bird.jump();
         }
 
