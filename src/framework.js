@@ -183,7 +183,8 @@ class Renderer {
             this.context.restore();
         }
         if(this.debug) {
-            this.drawCollisionBoxes();
+
+             this.drawCollisionBoxes();
 
             for(let i in this.game.sprites) {
                 this.debugSprite(this.game.sprites[i]);

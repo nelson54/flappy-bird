@@ -229,7 +229,7 @@ class Pipe extends Sprite {
             this.isAlive = false;
         }
 
-        if(!this.isPassed && (this.x + (this.width * .5)) < this.game.bird.x) {
+        if(!this.game.isGameOver && !this.isPassed && (this.x + (this.width * .5)) < this.game.bird.x) {
             this.isPassed = true;
             this.game.score++;
         }
