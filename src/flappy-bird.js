@@ -145,10 +145,10 @@ class FlappyBird extends Game {
 
     endGame() {
         if(!this.isGameOver) {
-            this.bird.freezeAnimation = true;
-
             this.isGameOver = true;
+            this.bird.freezeAnimation = true;
             this.gameOver = new GameOver(this, 188, 38);
+
             this.gameOver.color = 'rgba(0,0,0,0)';
             this.gameOver.texture = 'game-over';
             this.addSprite(this.gameOver);
@@ -186,7 +186,7 @@ class Bird extends Sprite {
         if(this.yDelta > 0) {
             this.yDelta = -100;
         } else {
-            this.yDelta *= 1.3;
+            this.yDelta *= 1.1;
         }
 
 
@@ -285,3 +285,15 @@ class Score100s extends Sprite {
         this.texture = score[score.length-3]
     }
 }
+
+/**
+ * What does the team look like, what is the team you wanted to work on.
+ *
+ * Time off,
+ *
+ * How big is the project? What support is there?
+ *
+ * Designers, developers, will I be working on my own project?
+ *
+ * What do you do for
+ */
