@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flappy Bird</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+
+    <script type="text/javascript" src="./src/framework.js"></script>
+    <script type="text/javascript" src="./src/flappy-bird.js"></script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', ()=>{
+            let game = new FlappyBird(window.innerWidth, window.innerHeight);
+
+            game.start();
+        })
+    </script>
+</head>
+<body>
+
+</body>
+</html>
