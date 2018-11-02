@@ -1,6 +1,9 @@
 class Game {
     constructor(width, height) {
         this.renderer = new Renderer(this, width, height);
+
+        this.physicsSystem = new PhysicsSystem();
+
         this.width = width;
         this.height = height;
 
@@ -75,6 +78,10 @@ class Sprite {
         this.rotation = 0;
 
         this.isAlive = true;
+    }
+
+    registerBody(body) {
+        this.game.physicsSystem.addBody(body);
     }
 
     animate(frames, speed) {
@@ -177,6 +184,8 @@ class Renderer {
             this.context.restore();
         }
 
+        this.drawCollisionBoxes();
+
         if(this.debug) {
             for(let i in this.game.sprites) {
                 this.debugSprite(this.game.sprites[i]);
@@ -195,9 +204,6 @@ class Renderer {
         this.context.beginPath();
 
         this.context.globalAlpha = sprite.opacity;
-
-        let drawX = sprite.x - (sprite.width * sprite.anchor.x),
-            drawY = sprite.y - (sprite.height * sprite.anchor.y);
 
         this.context.translate(sprite.x, sprite.y);
         this.context.rotate(sprite.rotation);
@@ -218,6 +224,10 @@ class Renderer {
     }
 
     debugSprite(sprite) {
+        for(let i in sprite.children) {
+            this.debugSprite(sprite.children[i])
+        }
+
         let info = {
             x: sprite.x,
             y: sprite.y,
@@ -238,7 +248,44 @@ class Renderer {
         this.context.beginPath();
         this.context.arc(sprite.x, sprite.y, 5, 0, 2 * Math.PI);
         this.context.fill();
+    }
 
+    drawCollisionBoxes() {
+        this.game.physicsSystem.bodies.forEach((body) => {
+            if(body.shape === RigidBody.SHAPES.RECTANGLE) {
+                this.drawRectangle(body);
+            } else if(body.shape === RigidBody.SHAPES.CIRCLE) {
+                this.drawCircle(body)
+            }
+        });
+    }
+
+    drawCircle(body) {
+        if(body.collisions.length > 0) {
+            this.context.fillStyle = 'rgba(255, 0, 0, 0.5)';
+        } else {
+            this.context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        }
+
+        this.context.beginPath();
+        this.context.arc(body.sprite.x, body.sprite.y, body.radius, 0, 2 * Math.PI);
+        this.context.fill();
+    }
+
+    drawRectangle(body) {
+        if(body.collisions.length > 0) {
+            this.context.fillStyle = 'rgba(255, 0, 0, 0.5)';
+        } else {
+            this.context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        }
+
+        let drawX = body.sprite.x - (body.sprite.width * body.sprite.anchor.x),
+            drawY = body.sprite.y - (body.sprite.height * body.sprite.anchor.y);
+
+        this.context.beginPath()
+
+        this.context.rect(drawX, drawY, body.width, body.height);
+        this.context.fill();
     }
 }
 

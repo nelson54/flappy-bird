@@ -4,7 +4,9 @@ class FlappyBird extends Game {
 
 
         super(width, height);
-        //this.renderer.debug = true;
+        this.renderer.debug = true;
+
+        this.physicsSystem.addCollisionType('bird', ['pipe']);
 
         this.backgroundColor = '#70C5CE';
 
@@ -61,6 +63,9 @@ class FlappyBird extends Game {
         this.addSprite(this.pipes);
 
         this.bird = new Bird(this, 100, 100, 39, 28);
+
+        this.bird.registerBody(new CircleBounds('bird', this.bird, this.bird.height/2));
+
         this.bird.texture = 'bird-1';
 
         this.bird.animate(['bird-1', 'bird-2', 'bird-3'], 150);
@@ -94,15 +99,17 @@ class FlappyBird extends Game {
     tick(timeDelta) {
         this.turn++;
 
+        this.scoreText = this.score.toString().padStart(3, '0');
 
         if(this.inputHandler.keysPressed['Space'] || this.inputHandler.keysPressed['Touch']) {
             this.bird.jump();
         }
 
-
         this.addPipe();
 
         super.tick(timeDelta);
+
+        this.physicsSystem.detectCollisions();
 
         this.inputHandler.clear();
     }
@@ -116,11 +123,15 @@ class FlappyBird extends Game {
             topPipe.texture = 'pipe';
             topPipe.color = 'rgba(0,0,0,0)';
             topPipe.anchor = {x: 0, y: 1};
+
+            topPipe.registerBody(new RectangleBody('pipe', topPipe));
+
             this.pipes.addChild(topPipe);
 
             let bottomPipe = new Pipe(this, this.width, yPosition + 150, this.pipeWidth, 1000, true);
             bottomPipe.color = 'rgba(0,0,0,0)';
             bottomPipe.texture = 'pipe';
+            bottomPipe.registerBody(new RectangleBody('pipe', bottomPipe));
             this.pipes.addChild(bottomPipe);
 
             this.lastPipe = bottomPipe;
@@ -170,43 +181,6 @@ class Bird extends Sprite {
     }
 }
 
-class Background extends Sprite {
-
-    constructor(game, x, y, width, height, speed) {
-        super(game, x, y, width, height);
-        this.speed = speed;
-    }
-
-    update(timeDelta) {
-        if(this.x < -this.width) {
-            this.x = this.game.width - 1 ;
-        }
-
-        this.x -= this.speed * timeDelta * .001;
-    }
-}
-
-class Score1s extends Sprite {
-    update() {
-        let score = this.game.score.toString().padStart(4, '0');
-        this.texture = score[score.length-1]
-    }
-}
-
-class Score10s extends Sprite {
-    update() {
-        let score = this.game.score.toString().padStart(4, '0');
-        this.texture = score[score.length-2]
-    }
-}
-
-class Score100s extends Sprite {
-    update() {
-        let score = this.game.score.toString().padStart(4, '0');
-        this.texture = score[score.length-3]
-    }
-}
-
 class Pipe extends Sprite {
     constructor(game, x, y, width, height, trackScore) {
         super(game, x, y, width, height);
@@ -225,5 +199,42 @@ class Pipe extends Sprite {
             this.isPassed = true;
             this.game.score++;
         }
+    }
+}
+
+class Background extends Sprite {
+
+    constructor(game, x, y, width, height, speed) {
+        super(game, x, y, width, height);
+        this.speed = speed;
+    }
+
+    update(timeDelta) {
+        if(this.x < -this.width) {
+            this.x = this.game.width - 1 ;
+        }
+
+        this.x -= this.speed * timeDelta * .001;
+    }
+}
+
+class Score1s extends Sprite {
+    update() {
+        let score = this.game.scoreText;
+        this.texture = this.game.scoreText[score.length-1]
+    }
+}
+
+class Score10s extends Sprite {
+    update() {
+        let score = this.game.scoreText;
+        this.texture = score[score.length-2]
+    }
+}
+
+class Score100s extends Sprite {
+    update() {
+        let score = this.game.scoreText;
+        this.texture = score[score.length-3]
     }
 }
