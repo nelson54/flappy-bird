@@ -95,7 +95,7 @@ class FlappyBird extends Game {
         this.turn++;
 
 
-        if(this.inputHandler.keysPressed['Space']) {
+        if(this.inputHandler.keysPressed['Space'] || this.inputHandler.keysPressed['Touch']) {
             this.bird.jump();
         }
 

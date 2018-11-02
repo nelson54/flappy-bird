@@ -9,8 +9,6 @@ class Game {
         this.inputHandler = new InputHandler();
         this.sprites = [];
 
-        this.pruneRate = 10;
-
         this.turn = 0;
     }
 
@@ -253,10 +251,18 @@ class InputHandler {
         document.addEventListener('keydown', (e) => {
             this.handleKeyDown(e);
         });
+
+        document.addEventListener('touchstart', (e) => {
+            this.handleTouch(e);
+        });
     }
 
     handleKeyDown(key) {
         this.keysPressed[key.code] = true;
+    }
+
+    handleTouch(event) {
+        this.keysPressed['Touch'] = true;
     }
 
     clear() {
