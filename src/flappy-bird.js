@@ -161,7 +161,7 @@ class FlappyBird extends Game {
         this.gameOver = null;
 
         this.score = 0;
-        this.bird.x = 100;
+        this.bird.x = this.width * .6;
         this.bird.y = 100;
         this.bird.rotation = 0;
         this.bird.freezeAnimation = false;
@@ -172,6 +172,8 @@ class Bird extends Sprite {
 
     constructor(game, x, y, width, height) {
         super(game, x, y, width, height);
+
+        this.x = game.width * .6;
     }
 
     handleCollision(sprite) {
@@ -223,7 +225,7 @@ class Pipe extends Sprite {
     }
 
     update(timeDelta) {
-        this.x += -30 * timeDelta * .001;
+        this.x -= 40 * timeDelta * .001;
 
         if(this.x < -this.width) {
             this.isAlive = false;
