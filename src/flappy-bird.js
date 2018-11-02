@@ -63,7 +63,7 @@ class FlappyBird extends Game {
 
         this.addSprite(this.pipes);
 
-        this.bird = new Bird(this, 100, 100, 39, 28);
+        this.bird = new Bird(this, 100, 300, 39, 28);
 
         this.bird.registerBody(new CircleBounds('bird', this.bird, this.bird.height/2));
 
@@ -162,7 +162,7 @@ class FlappyBird extends Game {
 
         this.score = 0;
         this.bird.x = this.width * .6;
-        this.bird.y = 100;
+        this.bird.y = 300;
         this.bird.rotation = 0;
         this.bird.freezeAnimation = false;
     }
