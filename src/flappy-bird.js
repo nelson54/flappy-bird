@@ -1,10 +1,10 @@
 class FlappyBird extends Game {
 
     constructor(width, height) {
-
-
         super(width, height);
-        this.renderer.debug = true;
+        //this.renderer.debug = true;
+
+        this.isGameOver = false;
 
         this.physicsSystem.addCollisionType('bird', ['pipe']);
 
@@ -22,6 +22,7 @@ class FlappyBird extends Game {
         this.addImage('bird-1', 'img/bird-1.png');
         this.addImage('bird-2', 'img/bird-2.png');
         this.addImage('bird-3', 'img/bird-3.png');
+        this.addImage('game-over', 'img/game-over.png');
         this.addImage('0', 'img/0.png');
         this.addImage('1', 'img/1.png');
         this.addImage('2', 'img/2.png');
@@ -101,8 +102,12 @@ class FlappyBird extends Game {
 
         this.scoreText = this.score.toString().padStart(3, '0');
 
-        if(this.inputHandler.keysPressed[' '] || this.inputHandler.keysPressed['Touch']) {
+        if((this.inputHandler.keysPressed[' '] || this.inputHandler.keysPressed['Touch']) && !this.isGameOver) {
             this.bird.jump();
+        }
+
+        if(this.isGameOver && this.inputHandler.keysPressed['Enter']) {
+            this.restart();
         }
 
         this.addPipe();
@@ -137,12 +142,41 @@ class FlappyBird extends Game {
             this.lastPipe = bottomPipe;
         }
     }
+
+    endGame() {
+        if(!this.isGameOver) {
+            this.isGameOver = true;
+            this.gameOver = new GameOver(this, 188, 38);
+            this.gameOver.color = 'rgba(0,0,0,0)';
+            this.gameOver.texture = 'game-over';
+            this.addSprite(this.gameOver);
+        }
+    }
+
+    restart() {
+        this.isGameOver = false;
+
+
+        this.gameOver.isAlive = false;
+        this.gameOver = null;
+
+        this.score = 0;
+        this.bird.x = 100;
+        this.bird.y = 100;
+        this.bird.rotation = 0;
+        this.bird.freezeAnimation = false;
+    }
 }
 
 class Bird extends Sprite {
 
     constructor(game, x, y, width, height) {
         super(game, x, y, width, height);
+    }
+
+    handleCollision(sprite) {
+        this.freezeAnimation = true;
+        this.game.endGame();
     }
 
     jump() {
@@ -215,6 +249,12 @@ class Background extends Sprite {
         }
 
         this.x -= this.speed * timeDelta * .001;
+    }
+}
+
+class GameOver extends Sprite {
+    constructor(game, width, height) {
+        super(game, .5 * (game.width - width), game.height * .75, 188, 38);
     }
 }
 

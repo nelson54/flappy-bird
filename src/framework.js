@@ -50,8 +50,6 @@ class Game {
         this.renderer.drawScene();
 
         this.sprites = alive;
-
-        console.log(`Sprite count: ${this.sprites.length}`);
     }
 }
 
@@ -78,10 +76,15 @@ class Sprite {
         this.rotation = 0;
 
         this.isAlive = true;
+        this.freezeAnimation = false;
     }
 
     registerBody(body) {
         this.game.physicsSystem.addBody(body);
+    }
+
+    update(timeDelta) {
+
     }
 
     animate(frames, speed) {
@@ -91,7 +94,7 @@ class Sprite {
     }
 
     incrementFrame(frameDiff) {
-        if(this.frames && this.frames.length > 0  ) {
+        if(!this.freezeAnimation && this.frames && this.frames.length > 0  ) {
             this.currentAnimation -= frameDiff;
             if(this.currentAnimation < 0) {
                 this.currentFrame = (this.currentFrame + 1) % this.frames.length;
@@ -106,18 +109,6 @@ class Sprite {
             y = (this.y - (this.height * this.anchor.y)) + this.height * .5;
 
         return {x, y};
-    }
-
-    top() {
-        return this.x + (this.width * this.anchor.x)
-    }
-
-    left() {
-
-    }
-
-    right() {
-
     }
 
     rotate(degrees) {
@@ -191,10 +182,9 @@ class Renderer {
             this.draw(sprite);
             this.context.restore();
         }
-
-        this.drawCollisionBoxes();
-
         if(this.debug) {
+            this.drawCollisionBoxes();
+
             for(let i in this.game.sprites) {
                 this.debugSprite(this.game.sprites[i]);
             }
@@ -290,7 +280,7 @@ class Renderer {
         let drawX = body.sprite.x - (body.sprite.width * body.sprite.anchor.x),
             drawY = body.sprite.y - (body.sprite.height * body.sprite.anchor.y);
 
-        this.context.beginPath()
+        this.context.beginPath();
 
         this.context.rect(drawX, drawY, body.width, body.height);
         this.context.fill();

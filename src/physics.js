@@ -33,6 +33,7 @@ class PhysicsSystem {
     }
 
     processCollisionType(bodies, collidingBodies) {
+
         bodies.forEach(source => {
             if(source.collisions.length > 0) {
                 source.collisions = [];
@@ -42,6 +43,10 @@ class PhysicsSystem {
                 if(this.detectCollision(source, collidingBody)) {
                     source.collisions.push(collidingBody);
                     collidingBody.collisions.push(collidingBody);
+
+                    if(typeof source.sprite.handleCollision === 'function') {
+                        source.sprite.handleCollision(collidingBody.sprite);
+                    }
                 }
             })
         })
@@ -66,21 +71,6 @@ class PhysicsSystem {
             return true;
         }
         //if(circleCenter.x - rectangle.sprite.x < circle.radius && circleCenter.x - rectangle.spri)
-    }
-
-    intersects(circle, rect) {
-        circleDistance.x = abs(circle.x - rect.x);
-        circleDistance.y = abs(circle.y - rect.y);
-
-        if (circleDistance.x > (rect.width/2 + circle.r)) { return false; }
-        if (circleDistance.y > (rect.height/2 + circle.r)) { return false; }
-
-        if (circleDistance.x <= (rect.width/2)) { return true; }
-        if (circleDistance.y <= (rect.height/2)) { return true; }
-
-        cornerDistance_sq = (circleDistance.x - rect.width/2)^2 + (circleDistance.y - rect.height/2)^2;
-
-        return (cornerDistance_sq <= (circle.r^2));
     }
 }
 
