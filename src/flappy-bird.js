@@ -106,7 +106,7 @@ class FlappyBird extends Game {
             this.bird.jump();
         }
 
-        if(this.isGameOver && this.inputHandler.keysPressed['Enter']) {
+        if(this.isGameOver && (this.inputHandler.keysPressed['Enter'] || this.inputHandler.keysPressed['Touch'])) {
             this.restart();
         }
 
