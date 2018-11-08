@@ -106,6 +106,10 @@ class FlappyBird extends Game {
             this.bird.jump();
         }
 
+        if(this.inputHandler.keysPressed['d']) {
+            this.renderer.debug = !this.renderer.debug;
+        }
+
         if(this.isGameOver && (this.inputHandler.keysPressed['Enter'] || this.inputHandler.keysPressed['Touch'])) {
             this.restart();
         }
@@ -285,15 +289,3 @@ class Score100s extends Sprite {
         this.texture = score[score.length-3]
     }
 }
-
-/**
- * What does the team look like, what is the team you wanted to work on.
- *
- * Time off,
- *
- * How big is the project? What support is there?
- *
- * Designers, developers, will I be working on my own project?
- *
- * What do you do for
- */
