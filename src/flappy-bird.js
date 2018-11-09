@@ -237,7 +237,7 @@ class Bird extends Sprite {
         if(this.isJumping) {
             this.jumpLength -= timeDelta;
 
-            this.jumpPosition = 600 / this.jumpLength;
+            this.jumpPosition = 500 / this.jumpLength;
 
             if(this.jumpLength <= 0) {
                 this.isJumping = false;

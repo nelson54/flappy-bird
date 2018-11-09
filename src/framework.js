@@ -30,7 +30,7 @@ class Game {
                 this.tick(timeDiff);
                 lastStepTime = step;
             });
-        }, 1000/60);
+        }, 1000/256);
     }
 
     tick(timeDelta) {
@@ -86,13 +86,13 @@ class Sprite {
     }
 
     cullChildren() {
-        //let alive = [];
-        //for(let i in this.children) {
-        //    if(this.children.isAlive) {
-        //        alive.push(this.children[i])
-        //    }
-        //}
-        //this.children = alive;
+        let alive = [];
+        for(let i in this.children) {
+            if(this.children[i].isAlive) {
+                alive.push(this.children[i])
+            }
+        }
+        this.children = alive;
     }
 
     registerBody(body) {
