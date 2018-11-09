@@ -87,7 +87,9 @@ class FlappyBird extends Game {
         score1s.color = 'rgba(0,0,0,0)';
         this.addSprite(score1s);
 
-
+        let message = new Text(this, 'Hit `d` to use', '14px serif', 100, 100);
+        message.color = 'black';
+        this.addSprite(message)
     }
 
     addImage(name, src) {
@@ -127,7 +129,7 @@ class FlappyBird extends Game {
         if(!this.lastPipe || this.lastPipe.x < (this.width - 180)) {
             let start = this.height * .2,
                 range = this.height * .6,
-                yPosition = (Math.random() * range);
+                yPosition = start  + (Math.random() * range);
             let topPipe = new Pipe(this, this.width, yPosition, this.pipeWidth, 1000, false);
             topPipe.texture = 'pipe';
             topPipe.color = 'rgba(0,0,0,0)';
@@ -170,6 +172,37 @@ class FlappyBird extends Game {
         this.bird.y = 300;
         this.bird.rotation = 0;
         this.bird.freezeAnimation = false;
+        this.bird.isAlive = true;
+
+        this.pipes.killChildren();
+        this.pipes.cullChildren();
+
+        this.physicsSystem.bodies = [];
+        this.physicsSystem.addBody(this.bird.body);
+
+        this.lastPipe = false;
+        this.addPipe();
+    }
+}
+
+class Text extends Sprite {
+    constructor(game, text, font='14px serif', x=0, y=0, width=0, height=0) {
+        super(game, x, y, width, height);
+        this.text = text;
+        this.font = font;
+    }
+}
+
+class DisappearingText extends Sprite {
+    constructor(game, text, font='14px serif', x=0, y=0, width=0, height=0) {
+        super(game, x, y, width, height);
+        this.text = text;
+        this.font = font;
+        this.opacity = 1;
+    }
+
+    update(timeDelta) {
+        this.opacity -= .05 * .001 * timeDelta;
     }
 }
 
@@ -235,10 +268,6 @@ class Pipe extends Sprite {
 
     update(timeDelta) {
         this.x -= 40 * timeDelta * .001;
-
-        if(this.x < -this.width) {
-            this.isAlive = false;
-        }
 
         if(!this.game.isGameOver && !this.isPassed && (this.x + (this.width * .5)) < this.game.bird.x) {
             this.isPassed = true;

@@ -39,8 +39,10 @@ class Game {
 
         for(let i in this.sprites) {
             sprite = this.sprites[i];
+
             sprite.incrementFrame(timeDelta);
             sprite.update(timeDelta);
+            sprite.cullChildren();
 
             if(sprite.isAlive) {
                 alive.push(sprite);
@@ -77,9 +79,24 @@ class Sprite {
 
         this.isAlive = true;
         this.freezeAnimation = false;
+
+        this.text = null;
+
+        this.font = null;
+    }
+
+    cullChildren() {
+        //let alive = [];
+        //for(let i in this.children) {
+        //    if(this.children.isAlive) {
+        //        alive.push(this.children[i])
+        //    }
+        //}
+        //this.children = alive;
     }
 
     registerBody(body) {
+        this.body = body;
         this.game.physicsSystem.addBody(body);
     }
 
@@ -91,6 +108,14 @@ class Sprite {
         this.frames = frames;
         this.animateSpeed = speed;
         this.currentAnimation = speed;
+    }
+
+    killChildren() {
+        this.children.forEach((child)=>{
+            child.isAlive = false;
+        })
+
+        this.children = []
     }
 
     incrementFrame(frameDiff) {
@@ -124,19 +149,9 @@ class Group extends Sprite {
     }
 
     update(timeDelta) {
-        let alive = [],
-            child;
-
         for(let i in this.children) {
-            child = this.children[i];
-            child.update(timeDelta);
-
-            if(child.isAlive) {
-                alive.push(child)
-            }
+            this.children[i].update(timeDelta);
         }
-
-        this.children = alive;
     }
 
     addChild(sprite) {
@@ -150,8 +165,6 @@ class Renderer {
 
         this.width = width;
         this.height = height;
-
-
 
         let canvas = this.canvas = document.createElement('canvas');
 
@@ -217,6 +230,14 @@ class Renderer {
             relativeY = -sprite.height * sprite.anchor.y;
 
             this.context.drawImage(this.game.textures[sprite.texture], relativeX, relativeY);
+        }
+
+
+        if(sprite.text && sprite.font) {
+            this.context.font = sprite.font;
+            this.context.fillStyle = 'black';
+
+            this.context.fillText(sprite.text, relativeX, relativeY);
         }
 
         this.context.setTransform.call(this.context, this.transformMatrix);

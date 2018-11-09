@@ -40,7 +40,7 @@ class PhysicsSystem {
             }
 
             collidingBodies.forEach(collidingBody => {
-                if(this.detectCollision(source, collidingBody)) {
+                if(source.sprite.isAlive && collidingBody.sprite.isAlive && this.detectCollision(source, collidingBody)) {
                     source.collisions.push(collidingBody);
                     collidingBody.collisions.push(collidingBody);
 
