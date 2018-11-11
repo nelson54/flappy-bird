@@ -6,6 +6,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default class App extends React.Component {
   render() {
     return (<View style={{flex:1}}>
+        <button></button>
         <WebView
             source={{uri: 'http://nelson54.github.io/flappy-bird/index.html'}}
             style={{flex: 1, height: '100%', width: '100%'}}

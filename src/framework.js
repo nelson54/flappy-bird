@@ -30,7 +30,7 @@ class Game {
                 this.tick(timeDiff);
                 lastStepTime = step;
             });
-        }, 1000/256);
+        }, 1000/60);
     }
 
     tick(timeDelta) {
