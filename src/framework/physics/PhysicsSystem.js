@@ -10,7 +10,7 @@ module.exports = class PhysicsSystem {
 
         this.bodiesByType = {};
 
-        this.MAXIMUM_FALL_VELOCITY = 300;
+        this.MAXIMUM_FALL_VELOCITY = 400;
         this.GRAVITY_DECAY = 0.03;
     }
 

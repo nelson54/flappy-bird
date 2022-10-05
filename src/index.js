@@ -1,4 +1,4 @@
-const FlappyBird = require('./FlappyBird')
+const FlappyBird = require('./flappybird/FlappyBird')
 
 document.addEventListener('DOMContentLoaded', ()=>{
   let game = new FlappyBird(window.innerWidth, window.innerHeight);

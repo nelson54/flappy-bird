@@ -1,13 +1,21 @@
-const Game = require('./framework/Game')
-const Sprite = require('./framework/sprites/Sprite')
-const Group = require('./framework/sprites/Group')
-const CircleBounds = require('./framework/physics/body/CircleBounds')
-const RectangleBody = require('./framework/physics/body/RectangleBody')
+const Game = require('../framework/Game')
+const Text = require('../framework/sprites/Text')
+
+const Bird = require('./sprites/Bird')
+const Background = require('./sprites/Background')
+const GameOver = require('./sprites/GameOver')
+const Pipe = require('./sprites/Pipe')
+const Score1s = require('./sprites/Score1s')
+const Score10s = require('./sprites/Score10s')
+const Score100s = require('./sprites/Score100s')
+const Group = require('../framework/sprites/Group')
+
+const CircleBounds = require('../framework/physics/body/CircleBounds')
+const RectangleBody = require('../framework/physics/body/RectangleBody')
 
 module.exports = class FlappyBird extends Game {
 
     constructor(width, height) {
-        console.log("TESTING")
         super(width, height);
         //this.renderer.debug = true;
 
@@ -192,123 +200,9 @@ module.exports = class FlappyBird extends Game {
     }
 }
 
-class Text extends Sprite {
-    constructor(game, text, font='14px serif', x=0, y=0, width=0, height=0) {
-        super(game, x, y, width, height);
-        this.text = text;
-        this.font = font;
-    }
-}
 
-class DisappearingText extends Sprite {
-    constructor(game, text, font='14px serif', x=0, y=0, width=0, height=0) {
-        super(game, x, y, width, height);
-        this.text = text;
-        this.font = font;
-        this.opacity = 1;
-    }
 
-    update(timeDelta) {
-        this.opacity -= .05 * .001 * timeDelta;
-    }
-}
 
-class Bird extends Sprite {
 
-    constructor(game, x, y, width, height) {
-        super(game, x, y, width, height);
-        this.currentRotation = 365
-        this.x = game.width * .6;
-    }
 
-    handleCollision(sprite) {
-        this.game.endGame();
-    }
 
-    jump() {
-        if(this.yDelta > -100) {
-            this.yDelta = -400;
-        }
-    }
-
-    update(timeDelta) {
-        if(this.y < -200 || this.y > this.game.height + 200) {
-            this.game.endGame();
-        }
-
-        if(this.yDelta <= 0) {
-            this.texture = this.frames[0]
-        } else if(this.yDelta > 0 && this.yDelta <= 200) {
-            this.texture = this.frames[2]
-        } else {
-            this.texture = this.frames[1]
-        }
-
-        this.game.physicsSystem.update(this, timeDelta*.001);
-
-        const rotation = ((this.yDelta + this.game.physicsSystem.MAXIMUM_FALL_VELOCITY) / (this.game.physicsSystem.MAXIMUM_FALL_VELOCITY * 2)) * 130;
-        const lerp = (((rotation + ((Math.random() * 20) - 10 )) + (this.currentRotation * 5)) / 6)
-        this.rotate((lerp + 300) % 365);
-        this.currentRotation = rotation;
-    }
-}
-
-class Pipe extends Sprite {
-    constructor(game, x, y, width, height, trackScore) {
-        super(game, x, y, width, height);
-        this.color = 'green';
-        this.isPassed = trackScore;
-    }
-
-    update(timeDelta) {
-        this.x -= 40 * timeDelta * .001;
-
-        if(!this.game.isGameOver && !this.isPassed && (this.x + (this.width * .5)) < this.game.bird.x) {
-            this.isPassed = true;
-            this.game.score++;
-        }
-    }
-}
-
-class Background extends Sprite {
-
-    constructor(game, x, y, width, height, speed) {
-        super(game, x, y, width, height);
-        this.speed = speed;
-    }
-
-    update(timeDelta) {
-        if(this.x < -this.width) {
-            this.x = this.game.width - 1 ;
-        }
-
-        this.x -= this.speed * timeDelta * .001;
-    }
-}
-
-class GameOver extends Sprite {
-    constructor(game, width, height) {
-        super(game, .5 * (game.width - width), game.height * .75, 188, 38);
-    }
-}
-
-class Score1s extends Sprite {
-    update() {
-        let score = this.game.scoreText;
-        this.texture = this.game.scoreText[score.length-1]
-    }
-}
-
-class Score10s extends Sprite {
-    update() {
-        let score = this.game.scoreText;
-        this.texture = score[score.length-2]
-    }
-}
-
-class Score100s extends Sprite {
-    update() {
-        let score = this.game.scoreText;
-        this.texture = score[score.length-3]
-    }
-}
