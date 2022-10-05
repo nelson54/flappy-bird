@@ -1,10 +1,29 @@
-class PhysicsSystem {
+const CollisionType = require('./CollisionType')
+const RigidBody = require('./body/RigidBody')
+//const CollisionEvent = require('./CollisionEvent')
+
+module.exports = class PhysicsSystem {
     constructor() {
         this.types = {};
 
         this.bodies = [];
 
         this.bodiesByType = {};
+
+        this.MAXIMUM_FALL_VELOCITY = 300;
+        this.GRAVITY_DECAY = 0.03;
+    }
+
+    update(sprite, timeDelta) {
+        sprite.y += (sprite.yDelta * timeDelta);
+
+        if(sprite.yDelta < this.MAXIMUM_FALL_VELOCITY) {
+            sprite.yDelta += this.MAXIMUM_FALL_VELOCITY * this.GRAVITY_DECAY;
+        } else if (sprite.yDelta > this.MAXIMUM_FALL_VELOCITY) {
+            sprite.yDelta = this.MAXIMUM_FALL_VELOCITY
+        }
+
+        console.log(sprite.y)
     }
 
     addBody(body) {
@@ -74,51 +93,4 @@ class PhysicsSystem {
     }
 }
 
-class CollisionType {
-    constructor(type, collidesWith) {
-        this.type = type;
-        this.collidesWith = collidesWith;
-    }
-}
 
-class CollisionEvent {
-    constructor(source, collision) {
-        this.source = source;
-        this.collision = collision;
-    }
-}
-
-class RigidBody {
-
-    constructor(type, sprite, shape) {
-        this.type = type;
-        this.sprite = sprite;
-        this.shape = shape;
-        this.collisions = [];
-    }
-
-}
-
-RigidBody.SHAPES = {CIRCLE: 'CIRCLE', RECTANGLE: 'RECTANGLE'};
-
-
-class CircleBounds extends RigidBody {
-    constructor(type, sprite, radius) {
-        super(type, sprite, RigidBody.SHAPES.CIRCLE);
-        this.radius = radius;
-    }
-}
-
-class RectangleBody extends RigidBody {
-    constructor(type, sprite) {
-        super(type, sprite, RigidBody.SHAPES.RECTANGLE);
-    }
-
-    get width() {
-        return this.sprite.width;
-    }
-
-    get height() {
-        return this.sprite.height;
-    }
-}

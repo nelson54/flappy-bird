@@ -1,19 +1,27 @@
 {
   "name": "flappy-bird",
-  "main": "node_modules/expo/AppEntry.js",
+  "version": "1.0.0",
+  "description": "A javascript version of flappy bird written from scratch.",
+  "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "eject": "expo eject"
+    "serve": "webpack serve --config development.config.js",
+    "build": "webpack --config development.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "expo": "^31.0.2",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nelson54/flappy-bird.git"
   },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nelson54/flappy-bird/issues"
+  },
+  "homepage": "https://github.com/nelson54/flappy-bird#readme",
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0"
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
   }
 }

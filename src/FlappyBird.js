@@ -1,6 +1,13 @@
-class FlappyBird extends Game {
+const Game = require('./framework/Game')
+const Sprite = require('./framework/sprites/Sprite')
+const Group = require('./framework/sprites/Group')
+const CircleBounds = require('./framework/physics/body/CircleBounds')
+const RectangleBody = require('./framework/physics/body/RectangleBody')
+
+module.exports = class FlappyBird extends Game {
 
     constructor(width, height) {
+        console.log("TESTING")
         super(width, height);
         //this.renderer.debug = true;
 
@@ -16,23 +23,23 @@ class FlappyBird extends Game {
 
         this.pipes = new Group(this);
 
-        this.addImage('background', 'img/background.png');
-        this.addImage('ground', 'img/ground.png');
-        this.addImage('pipe', 'img/pipe.png');
-        this.addImage('bird-1', 'img/bird-1.png');
-        this.addImage('bird-2', 'img/bird-2.png');
-        this.addImage('bird-3', 'img/bird-3.png');
-        this.addImage('game-over', 'img/game-over.png');
-        this.addImage('0', 'img/0.png');
-        this.addImage('1', 'img/1.png');
-        this.addImage('2', 'img/2.png');
-        this.addImage('3', 'img/3.png');
-        this.addImage('4', 'img/4.png');
-        this.addImage('5', 'img/5.png');
-        this.addImage('6', 'img/6.png');
-        this.addImage('7', 'img/7.png');
-        this.addImage('8', 'img/8.png');
-        this.addImage('9', 'img/9.png');
+        this.loader.addImage('background', '/assets/img/background.png');
+        this.loader.addImage('ground', '/assets/img/ground.png');
+        this.loader.addImage('pipe', '/assets/img/pipe.png');
+        this.loader.addImage('bird-1', '/assets/img/bird-1.png');
+        this.loader.addImage('bird-2', '/assets/img/bird-2.png');
+        this.loader.addImage('bird-3', '/assets/img/bird-3.png');
+        this.loader.addImage('game-over', '/assets/img/game-over.png');
+        this.loader.addImage('0', '/assets/img/0.png');
+        this.loader.addImage('1', '/assets/img/1.png');
+        this.loader.addImage('2', '/assets/img/2.png');
+        this.loader.addImage('3', '/assets/img/3.png');
+        this.loader.addImage('4', '/assets/img/4.png');
+        this.loader.addImage('5', '/assets/img/5.png');
+        this.loader.addImage('6', '/assets/img/6.png');
+        this.loader.addImage('7', '/assets/img/7.png');
+        this.loader.addImage('8', '/assets/img/8.png');
+        this.loader.addImage('9', '/assets/img/9.png');
 
         let backgroundHeight = 263;
         let backgroundWidth = 478;
@@ -69,7 +76,7 @@ class FlappyBird extends Game {
 
         this.bird.texture = 'bird-1';
 
-        this.bird.animate(['bird-1', 'bird-2', 'bird-3'], 150);
+        this.bird.frames = ['bird-1', 'bird-2', 'bird-3'];
 
         this.bird.color = 'rgba(0,0,0,0)';
         this.bird.anchor = {x:.5, y:.5};
@@ -139,7 +146,7 @@ class FlappyBird extends Game {
 
             this.pipes.addChild(topPipe);
 
-            let bottomPipe = new Pipe(this, this.width, yPosition + 150, this.pipeWidth, 1000, true);
+            let bottomPipe = new Pipe(this, this.width, yPosition + 200, this.pipeWidth, 1000, true);
             bottomPipe.color = 'rgba(0,0,0,0)';
             bottomPipe.texture = 'pipe';
             bottomPipe.registerBody(new RectangleBody('pipe', bottomPipe));
@@ -210,7 +217,7 @@ class Bird extends Sprite {
 
     constructor(game, x, y, width, height) {
         super(game, x, y, width, height);
-
+        this.currentRotation = 365
         this.x = game.width * .6;
     }
 
@@ -219,43 +226,30 @@ class Bird extends Sprite {
     }
 
     jump() {
-
-        if(this.yDelta > 0) {
-            this.yDelta = -100;
-        } else {
-            this.yDelta *= 1.1;
+        if(this.yDelta > -100) {
+            this.yDelta = -400;
         }
-
-
-        this.animateSpeed = 50;
-        this.isJumping = true;
-        this.jumpLength = 500;
-
     }
 
     update(timeDelta) {
-        if(this.isJumping) {
-            this.jumpLength -= timeDelta;
-
-            this.jumpPosition = 500 / this.jumpLength;
-
-            if(this.jumpLength <= 0) {
-                this.isJumping = false;
-                this.yDelta = 150;
-                this.animateSpeed = 150;
-            }
-        }
-
         if(this.y < -200 || this.y > this.game.height + 200) {
             this.game.endGame();
         }
 
+        if(this.yDelta <= 0) {
+            this.texture = this.frames[0]
+        } else if(this.yDelta > 0 && this.yDelta <= 200) {
+            this.texture = this.frames[2]
+        } else {
+            this.texture = this.frames[1]
+        }
 
-        this.y += this.yDelta * timeDelta * .001;
+        this.game.physicsSystem.update(this, timeDelta*.001);
 
-        this.currentRotation = (this.currentRotation + (-5 * timeDelta*.01)) % 365;
-
-        this.rotate(this.currentRotation);
+        const rotation = ((this.yDelta + this.game.physicsSystem.MAXIMUM_FALL_VELOCITY) / (this.game.physicsSystem.MAXIMUM_FALL_VELOCITY * 2)) * 130;
+        const lerp = (((rotation + ((Math.random() * 20) - 10 )) + (this.currentRotation * 5)) / 6)
+        this.rotate((lerp + 300) % 365);
+        this.currentRotation = rotation;
     }
 }
 

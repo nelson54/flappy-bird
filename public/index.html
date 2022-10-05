@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Floppy Bird</title>
+    <style type="text/css">
+      body {
+        overflow: hidden;
+      }
+
+      canvas { 
+        position: absolute; 
+        top: 0;
+        left: 0;
+
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body>
+    <script  id="vertex-shader" type="x-shader/x-vertex">
+      attribute vec4 a_position;
+      attribute vec2 a_texcoord;
+      
+      uniform mat4 u_matrix;
+      
+      varying vec2 v_texcoord;
+      
+      void main() {
+         gl_Position = u_matrix * a_position;
+         v_texcoord = a_texcoord;
+      }
+      </script>
+      <script  id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+      
+      varying vec2 v_texcoord;
+      
+      uniform sampler2D u_texture;
+      
+      void main() {
+         gl_FragColor = texture2D(u_texture, v_texcoord);
+      }
+      </script>
+    <script src="https://mrdoob.github.io/stats.js/build/stats.min.js"></script>
+    <script src="./main.js"></script>
+  
+  </body>
+</html>
+   

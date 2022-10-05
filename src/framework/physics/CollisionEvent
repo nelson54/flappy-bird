@@ -1,0 +1,6 @@
+module.exports = class CollisionEvent {
+    constructor(source, collision) {
+        this.source = source;
+        this.collision = collision;
+    }
+}
